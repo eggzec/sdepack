@@ -1,0 +1,128 @@
+[project]
+name = "sdepack"
+dynamic = ['version']
+description = "Runge-Kutta Numerical Integration Stochastic Differential Equations for Python"
+authors = [{ name = "Saud Zahir", email = "m.saud.zahir@gmail.com" }]
+maintainers = [{ name = "Saud Zahir", email = "m.saud.zahir@gmail.com" }]
+readme = "README.md"
+license = "MIT"
+keywords = [
+    "numerical",
+    "stochastic",
+    "ito",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    'Programming Language :: Fortran',
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering",
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX',
+    'Operating System :: Unix',
+    'Operating System :: MacOS',
+]
+requires-python = ">=3.9"
+
+dependencies = [
+    "numpy<2; python_version<'3.10'",
+    "numpy>=2; python_version>='3.10'",
+]
+
+[project.urls]
+homepage = "https://eggzec.github.io/sdepack"
+documentation = "https://eggzec.github.io/sdepack"
+source = "https://github.com/eggzec/sdepack"
+releasenotes = "https://github.com/eggzec/sdepack/releases/latest"
+issues = "https://github.com/eggzec/sdepack/issues"
+# TODO: provide changelog URL from docs
+
+[dependency-groups]
+dev = [
+  {include-group = "lint"},
+  {include-group = "test"}
+]
+lint = [
+    "ruff==0.14.*",
+]
+test = [
+    "pytest>=8.3.5",
+    "pytest-cov>=6.0",
+    "pytest-xdist>=3.6.1",
+]
+
+[build-system]
+requires = [
+    "meson-python",
+    "numpy>=2.0.0",
+    "packaging",
+    "setuptools_scm>=8"
+]
+build-backend = "mesonpy"
+
+[tool.setuptools_scm]
+version_scheme = "release-branch-semver"
+local_scheme = "no-local-version"
+
+[tool.ruff]
+
+required-version = "==0.14.*"
+line-length = 100
+indent-width = 4
+output-format = "grouped"
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors (PEP 8 style guide violations)
+    "W",   # pycodestyle warnings (e.g., extra spaces, indentation issues)
+    "C",   # Complexity checks (e.g., McCabe complexity, comprehensions)
+    "N",   # Naming convention checks (e.g., PEP 8 variable and function names)
+    "F",   # Pyflakes errors (e.g., unused imports, undefined variables)
+    "I",   # isort (Ensures imports are sorted properly)
+    "B",   # flake8-bugbear (Detects likely bugs and bad practices)
+    "TID", # flake8-tidy-imports (Checks for banned or misplaced imports)
+    "UP",  # pyupgrade (Automatically updates old Python syntax)
+    "YTT", # flake8-2020 (Detects outdated Python 2/3 compatibility issues)
+    "FLY", # flynt (Converts old-style string formatting to f-strings)
+    "RUF", # Ruff-specific rules (Additional optimizations and best practices)
+]
+
+ignore = [
+    "B006",    # Do not use mutable data structures for argument defaults.
+    "C408",    # Unnecessary `dict` call.
+    "C419",    # Unnecessary list comprehension.
+    "C901",    # Function is too complex.
+    "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`.
+    "N802",    # Function name {name} should be lowercase
+    "N815",    # Variable {name} in class scope should not be mixedCase
+    "N816",    # Global scope should not be mixedCase
+    "N999",    # Invalid module name
+]
+
+isort.lines-after-imports = 2
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402"]
+"**/{tests,docs,tools}/*" = ["E402"]
+
+[tool.ruff.format]
+quote-style = "double"  # Options: "single" or "double".
+indent-style = "space"  # Options: "space" or "tab".
+line-ending = "auto"    # Options: "auto", "LF", "CRLF", or "CR".
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+
+[tool.cibuildwheel]
+# Skip 32-bit Windows builds due to Fortran/Meson compatibility issues
+skip = ["*-win32"]
