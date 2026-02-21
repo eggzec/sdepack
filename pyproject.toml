@@ -81,5 +81,7 @@ version_scheme = "release-branch-semver"
 local_scheme = "no-local-version"
 
 [tool.cibuildwheel]
-# Skip 32-bit Windows builds due to Fortran/Meson compatibility issues
-skip = ["*-win32"]
+skip = [
+  "*-win32",  # skip 32-bit Windows
+  "pp*",      # skip all PyPy builds
+]
