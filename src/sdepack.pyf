@@ -1,0 +1,29 @@
+python module sdepack__user__routines
+    interface sdepack_user_interface
+        function f(x)
+            double precision intent(in) :: x
+            double precision :: f
+        end function f
+        function g(x)
+            double precision intent(in) :: x
+            double precision :: g
+        end function g
+    end interface sdepack_user_interface
+end python module sdepack__user__routines
+
+python module sdepack
+    interface
+        subroutine rk1_ti_solve(f,g,x,t0,tn,x0,n,q,seed) ! in :sdepack:rk1_ti_solve.f
+            use sdepack__user__routines
+            external f
+            external g
+            double precision dimension(0:n),intent(in,out),depend(n) :: x
+            double precision intent(in) :: t0
+            double precision intent(in) :: tn
+            double precision intent(in) :: x0
+            integer intent(in) :: n
+            double precision intent(in) :: q
+            integer intent(in) :: seed
+        end subroutine rk1_ti_solve
+    end interface
+end python module sdepack

@@ -4,4 +4,4 @@ project(
     version: run_command(['python', 'bin/get_version.py'], check: true).stdout().strip()
 )
 
-subdir('sdepack')
+subdir('src')
