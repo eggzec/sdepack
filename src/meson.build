@@ -28,6 +28,12 @@ fortran_sources = [
   'r8_normal.f',
   'r8_uniform.f',
   'rk1_ti_solve.f',
+  'rk1_tv_solve.f',
+  'rk2_ti_solve.f',
+  'rk2_tv_solve.f',
+  'rk3_ti_solve.f',
+  'rk4_ti_solve.f',
+  'rk4_tv_solve.f',
   'output.f'
 ]
 
@@ -44,10 +50,24 @@ f2py_target = custom_target(
   command: [f2py, '@INPUT@', '--lower', '--build-dir', meson.current_build_dir()]
 )
 
+if host_machine.system() == 'windows'
+  fortran_link_args = [
+    '-static-libgfortran',
+    '-static-libgcc',
+    '-static-libquadmath',
+    '-Wl,-Bstatic',
+    '-lwinpthread',
+    '-Wl,-Bdynamic',
+  ]
+else
+  fortran_link_args = []
+endif
+
 py.extension_module(
   py_mod_name,
   fortran_sources + [f2py_target, fortranobject_c],
   c_args: ['-I' + incdir_numpy, '-I' + incdir_f2py],
+  link_args: fortran_link_args,
   dependencies: py_dep,
   install: true
 )

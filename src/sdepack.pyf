@@ -1,5 +1,5 @@
-python module sdepack__user__routines
-    interface sdepack_user_interface
+python module sdepack__user__routines_ti
+    interface sdepack_user_interface_ti
         function f(x)
             double precision intent(in) :: x
             double precision :: f
@@ -8,13 +8,28 @@ python module sdepack__user__routines
             double precision intent(in) :: x
             double precision :: g
         end function g
-    end interface sdepack_user_interface
-end python module sdepack__user__routines
+    end interface sdepack_user_interface_ti
+end python module sdepack__user__routines_ti
+
+python module sdepack__user__routines_tv
+    interface sdepack_user_interface_tv
+        function f(x,t)
+            double precision intent(in) :: x
+            double precision intent(in) :: t
+            double precision :: f
+        end function f
+        function g(x,t)
+            double precision intent(in) :: x
+            double precision intent(in) :: t
+            double precision :: g
+        end function g
+    end interface sdepack_user_interface_tv
+end python module sdepack__user__routines_tv
 
 python module sdepack
     interface
         subroutine rk1_ti_solve(f,g,x,t0,tn,x0,n,q,seed) ! in :sdepack:rk1_ti_solve.f
-            use sdepack__user__routines
+            use sdepack__user__routines_ti
             external f
             external g
             double precision dimension(0:n),intent(in,out),depend(n) :: x
@@ -25,5 +40,83 @@ python module sdepack
             double precision intent(in) :: q
             integer intent(in) :: seed
         end subroutine rk1_ti_solve
+
+        subroutine rk1_tv_solve(f,g,x,t0,tn,x0,n,q,seed) ! in :sdepack:rk1_tv_solve.f
+            use sdepack__user__routines_tv
+            external f
+            external g
+            double precision dimension(0:n),intent(in,out),depend(n) :: x
+            double precision intent(in) :: t0
+            double precision intent(in) :: tn
+            double precision intent(in) :: x0
+            integer intent(in) :: n
+            double precision intent(in) :: q
+            integer intent(in) :: seed
+        end subroutine rk1_tv_solve
+
+        subroutine rk2_ti_solve(f,g,x,t0,tn,x0,n,q,seed) ! in :sdepack:rk2_ti_solve.f
+            use sdepack__user__routines_ti
+            external f
+            external g
+            double precision dimension(0:n),intent(in,out),depend(n) :: x
+            double precision intent(in) :: t0
+            double precision intent(in) :: tn
+            double precision intent(in) :: x0
+            integer intent(in) :: n
+            double precision intent(in) :: q
+            integer intent(in) :: seed
+        end subroutine rk2_ti_solve
+
+        subroutine rk2_tv_solve(f,g,x,t0,tn,x0,n,q,seed) ! in :sdepack:rk2_tv_solve.f
+            use sdepack__user__routines_tv
+            external f
+            external g
+            double precision dimension(0:n),intent(in,out),depend(n) :: x
+            double precision intent(in) :: t0
+            double precision intent(in) :: tn
+            double precision intent(in) :: x0
+            integer intent(in) :: n
+            double precision intent(in) :: q
+            integer intent(in) :: seed
+        end subroutine rk2_tv_solve
+
+        subroutine rk3_ti_solve(f,g,x,t0,tn,x0,n,q,seed) ! in :sdepack:rk3_ti_solve.f
+            use sdepack__user__routines_ti
+            external f
+            external g
+            double precision dimension(0:n),intent(in,out),depend(n) :: x
+            double precision intent(in) :: t0
+            double precision intent(in) :: tn
+            double precision intent(in) :: x0
+            integer intent(in) :: n
+            double precision intent(in) :: q
+            integer intent(in) :: seed
+        end subroutine rk3_ti_solve
+
+        subroutine rk4_ti_solve(f,g,x,t0,tn,x0,n,q,seed) ! in :sdepack:rk4_ti_solve.f
+            use sdepack__user__routines_ti
+            external f
+            external g
+            double precision dimension(0:n),intent(in,out),depend(n) :: x
+            double precision intent(in) :: t0
+            double precision intent(in) :: tn
+            double precision intent(in) :: x0
+            integer intent(in) :: n
+            double precision intent(in) :: q
+            integer intent(in) :: seed
+        end subroutine rk4_ti_solve
+
+        subroutine rk4_tv_solve(f,g,x,t0,tn,x0,n,q,seed) ! in :sdepack:rk4_tv_solve.f
+            use sdepack__user__routines_tv
+            external f
+            external g
+            double precision dimension(0:n),intent(in,out),depend(n) :: x
+            double precision intent(in) :: t0
+            double precision intent(in) :: tn
+            double precision intent(in) :: x0
+            integer intent(in) :: n
+            double precision intent(in) :: q
+            integer intent(in) :: seed
+        end subroutine rk4_tv_solve
     end interface
 end python module sdepack

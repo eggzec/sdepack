@@ -1,27 +1,22 @@
-      SUBROUTINE RK1_TI_SOLVE(F, G, X, T0, TN, X0, N, Q, SEED)
-C     *******************************************************************
+      SUBROUTINE RK2_TI_SOLVE(F, G, X, T0, TN, X0, N, Q, SEED)
+C     ***********************************************************************
 C
-C       RK1_TI_SOLVE integrates a scalar stochastic differential equation (SDE)
-C       using a first-order, time-invariant Runge-Kutta method (Euler-Maruyama).
+C       RK2_TI_SOLVE integrates a scalar stochastic differential equation (SDE)
+C       using a second-order, time-invariant Runge-Kutta method.
 C
 C       The SDE has the form:
 C
 C            dX(t) = F(X) dt + Q * G(X) dW(t)
 C
-C       where:
-C            - X(t) is the state variable
-C            - F(X) is the deterministic drift function
-C            - G(X) is the stochastic diffusion function
-C            - Q is the spectral density of the driving white noise
-C            - dW(t) is a Wiener process increment
+C       Numerical Integration (RK2 step):
 C
-C       Numerical Integration (Euler-Maruyama / RK1 step):
+C            K1 = H * F(X1) + H * G(X1) * W1
+C            K2 = H * F(X2) + H * G(X2) * W2
 C
-C            X_{n+1} = X_n + H * F(X_n) + sqrt(H*Q) * G(X_n) * Z_n
+C            X2      = X1 + A21 * K1
+C            X_{n+1} = X1 + A31 * K1 + A32 * K2
 C
-C            where:
-C              - H = (TN - T0)/N is the time step
-C              - Z_n ~ N(0,1) is a standard normal random variable
+C            A21 = 1, A31 = 0.5, A32 = 0.5, Q1 = Q2 = 2
 C
 C       This routine advances X from T0 to TN in N steps.
 C
@@ -70,7 +65,7 @@ C
 C         Input, integer SEED
 C             Seed for the random number generator.
 C
-C     *******************************************************************
+C     ***********************************************************************
 
       IMPLICIT NONE
 
@@ -89,13 +84,20 @@ C     *******************************************************************
       DOUBLE PRECISION X(0:N)
       DOUBLE PRECISION H
       DOUBLE PRECISION Q
-      DOUBLE PRECISION A21, Q1
-      DOUBLE PRECISION K1, W1, X1
+      DOUBLE PRECISION A21, A31, A32
+      DOUBLE PRECISION Q1, Q2
+      DOUBLE PRECISION K1, K2, W1, W2
+      DOUBLE PRECISION T1, T2
+      DOUBLE PRECISION X1, X2
 
       DOUBLE PRECISION TEMP
 
       A21 = 1.0D+00
-      Q1 = 1.0D+00
+      A31 = 0.5D+00
+      A32 = 0.5D+00
+
+      Q1 = 2.0D+00
+      Q2 = 2.0D+00
 
       H = (TN - T0) / DBLE(N)
 
@@ -104,16 +106,23 @@ C     *******************************************************************
 
       TEMP = X(0)
 
-      CALL TABLE_HEADER('RK-1 Time-Invariant')
+      CALL TABLE_HEADER('RK-2 Time-Invariant')
       CALL TABLE_ROW(0, T, TEMP)
 
       DO I = 1, N
             T = T0 + H * DBLE(I)
 
+            T1 = T
             X1 = X(I-1)
             W1 = R8_NORMAL(SEED) * SQRT(Q1 * Q / H)
             K1 = H * F(X1) + H * G(X1) * W1
-            X(I) = X1 + A21 * K1
+
+            T2 = T1 + A21 * H
+            X2 = X1 + A21 * K1
+            W2 = R8_NORMAL(SEED) * SQRT(Q2 * Q / H)
+            K2 = H * F(X2) + H * G(X2) * W2
+
+            X(I) = X1 + A31 * K1 + A32 * K2
 
             TEMP = X(I)
 

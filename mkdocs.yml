@@ -1,0 +1,37 @@
+site_name: sdepack
+site_description: Runge-Kutta Numerical Integration Stochastic Differential Equations for Python
+site_url: https://eggzec.github.io/sdepack
+repo_url: https://github.com/eggzec/sdepack
+repo_name: eggzec/sdepack
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/eggzec/sdepack
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/sdepack/
+
+theme:
+  name: material
+
+markdown_extensions:
+  - admonition
+  - tables
+  - fenced_code
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.arithmatex:
+      generic: true
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Theory: theory.md
+  - Installation: installation.md
+  - Quickstart: quickstart.md
+  - API Reference: api.md
+  - References: references.md

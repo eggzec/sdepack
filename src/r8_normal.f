@@ -6,15 +6,15 @@ C       value using the Box-Muller method.
 C
 C       Discussion:
 C
-C         This routine uses the Box Muller method, which requires pairs
-C         of uniform random values to generate a pair of normal random
-C         values. Since the user typically requests values one at a time,
-C         the code saVes the second value for the next call.
+C         Because this routine uses the Box Muller method, it requires pairs
+C         of uniform random values to generate a pair of normal random values.
+C         This means that on every other call, the code can use the second
+C         value that it calculated.
 C
-C         If the user changes the SEED between calls, the routine
-C         automatically resets itself and discards the saVed data.
+C         However, if the user has changed the SEED value between calls,
+C         the routine automatically resets itself and discards the saved data.
 C
-C       Licensing:
+C       License:
 C
 C         This code is distributed under the MIT license.
 C
@@ -28,7 +28,7 @@ C         John Burkardt
 C
 C       Parameters:
 C
-C         Input/output:
+C         Input:
 C           SEED   - INTEGER
 C                    SEED for the random number generator.
 C                    Updated internally.
