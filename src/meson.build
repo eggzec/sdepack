@@ -50,10 +50,17 @@ f2py_target = custom_target(
   command: [f2py, '@INPUT@', '--lower', '--build-dir', meson.current_build_dir()]
 )
 
+if host_machine.system() == 'windows'
+  fortran_link_args = ['-static-libgfortran', '-static-libgcc', '-static-libquadmath']
+else
+  fortran_link_args = []
+endif
+
 py.extension_module(
   py_mod_name,
   fortran_sources + [f2py_target, fortranobject_c],
   c_args: ['-I' + incdir_numpy, '-I' + incdir_f2py],
+  link_args: fortran_link_args,
   dependencies: py_dep,
   install: true
 )
