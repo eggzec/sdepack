@@ -51,7 +51,14 @@ f2py_target = custom_target(
 )
 
 if host_machine.system() == 'windows'
-  fortran_link_args = ['-static-libgfortran', '-static-libgcc', '-static-libquadmath']
+  fortran_link_args = [
+    '-static-libgfortran',
+    '-static-libgcc',
+    '-static-libquadmath',
+    '-Wl,-Bstatic',
+    '-lwinpthread',
+    '-Wl,-Bdynamic',
+  ]
 else
   fortran_link_args = []
 endif
