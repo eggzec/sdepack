@@ -44,7 +44,7 @@ dependencies = [
 
 [project.urls]
 homepage = "https://eggzec.github.io/sdepack"
-documentation = "https://eggzec.github.io/sdepack"
+documentation = "https://eggzec.github.io/sdepack/api/"
 source = "https://github.com/eggzec/sdepack"
 releasenotes = "https://github.com/eggzec/sdepack/releases/latest"
 issues = "https://github.com/eggzec/sdepack/issues"
@@ -56,10 +56,7 @@ dev = [
   {include-group = "test"}
 ]
 docs = [
-    "zensical>=0.0.23",
-    "mkdocstrings[python]>=0.30.1",
-    "mkdocs-minify-plugin>=0.8.0",
-    "pymdown-extensions>=10.15",
+    "zensical>=0.0.23"
 ]
 test = [
     "pytest>=8.3.5",
