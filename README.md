@@ -1,2 +1,2 @@
 # sdepack
-Runge-Kutta Numerical Integration Stochastic Differential Equations for Python
+Runge-Kutta Numerical Integration of Stochastic Differential Equations for Python
