@@ -15,7 +15,7 @@ C
 C         The integer arithmetic is done using Schrage's method to
 C         avoid overflow.
 C
-C       Licensing:
+C       License:
 C
 C         This code is distributed under the MIT license.
 C
@@ -39,9 +39,21 @@ C         in Handbook of Simulation,
 C         edited by Jerry Banks,
 C         Wiley Interscience, page 95, 1998.
 C
+C         Bennett Fox,
+C         Algorithm 647:
+C         Implementation and Relative Efficiency of Quasirandom
+C         Sequence Generators,
+C         ACM Transactions on Mathematical Software,
+C         Volume 12, Number 4, pages 362-376, 1986.
+C
+C         Peter Lewis, Allen Goodman, James Miller,
+C         A Pseudo-Random Number Generator for the System/360,
+C         IBM Systems Journal,
+C         Volume 8, pages 136-143, 1969.
+C
 C       Parameters:
 C
-C         Input/output:
+C         Input:
 C           SEED   - INTEGER
 C                    On input, a seed value. Must NOT be 0.
 C                    On output, the updated seed value.

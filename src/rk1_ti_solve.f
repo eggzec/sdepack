@@ -1,27 +1,76 @@
       SUBROUTINE RK1_TI_SOLVE(F, G, X, T0, TN, X0, N, Q, SEED)
-C     *****************************************************************
+C     *******************************************************************
 C
-C       RK1_TI_SOLVE solves a scalar stochastic differential equation
-C       using a first-order time-invariant Runge-Kutta (Euler-Maruyama)
-C       scheme with the step formula inlined in this routine.
+C       RK1_TI_SOLVE integrates a scalar stochastic differential equation (SDE)
+C       using a first-order, time-invariant Runge-Kutta method (Euler-Maruyama).
 C
-C       The equation has the form:
+C       The SDE has the form:
 C
-C         dX = F(X) dt + Q * G(X) dW
+C            dX(t) = F(X) dt + Q * G(X) dW(t)
 C
-C       Numerical Method (inlined RK1 step):
+C       where:
+C            - X(t) is the state variable
+C            - F(X) is the deterministic drift function
+C            - G(X) is the stochastic diffusion function
+C            - Q is the spectral density of the driving white noise
+C            - dW(t) is a Wiener process increment
 C
-C         X_{n+1} = X_n + H * F(X_n) + H * G(X_n) * W_1
+C       Numerical Integration (Euler-Maruyama / RK1 step):
 C
-C         W_1 = N(0,1) * SQRT(Q/H)
+C            X_{n+1} = X_n + H * F(X_n) + sqrt(H*Q) * G(X_n) * Z_n
 C
-C       This routine no longer depends on a separate RK step file.
+C            where:
+C              - H = (TN - T0)/N is the time step
+C              - Z_n ~ N(0,1) is a standard normal random variable
 C
-C       Licensing:
+C       This routine advances X from T0 to TN in N steps.
 C
-C         This code is distributed under the MIT license.
+C       License:
+C            This code is distributed under the MIT license.
 C
-C     *****************************************************************
+C       Author:
+C            John Burkardt
+C
+C       Modified:
+C            20 June 2010
+C
+C       Reference:
+C            - Kasdin, Jeremy. "Runge-Kutta algorithm for numerical integration
+C              of stochastic differential equations." Journal of Guidance, Control,
+C              and Dynamics, 18(1), 114-120, 1995.
+C            - Kasdin, Jeremy. "Discrete Simulation of Colored Noise and
+C              Stochastic Processes." Proceedings of the IEEE, 83(5), 802-827, 1995.
+C
+C       Parameters:
+C
+C         Input, external double precision F
+C             Deterministic function F(X) in the SDE.
+C
+C         Input, external double precision G
+C             Stochastic function G(X) in the SDE.
+C
+C         Output, double precision X(0:N)
+C             Array of solution values at each time step.
+C
+C         Input, double precision T0
+C             Initial time.
+C
+C         Input, double precision TN
+C             Final time.
+C
+C         Input, double precision X0
+C             Initial state value.
+C
+C         Input, integer N
+C             Number of time steps.
+C
+C         Input, double precision Q
+C             Spectral density of the driving white noise.
+C
+C         Input, integer SEED
+C             Seed for the random number generator.
+C
+C     *******************************************************************
 
       IMPLICIT NONE
 

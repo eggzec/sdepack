@@ -2,8 +2,13 @@
 name = "sdepack"
 dynamic = ['version']
 description = "Runge-Kutta Numerical Integration Stochastic Differential Equations for Python"
-authors = [{ name = "Saud Zahir", email = "m.saud.zahir@gmail.com" }]
-maintainers = [{ name = "Saud Zahir", email = "m.saud.zahir@gmail.com" }]
+authors = [
+    { name = "John Burkardt", email = "jvb25@pitt.edu" },
+]
+maintainers = [
+    { name = "Saud Zahir", email = "m.saud.zahir@gmail.com" },
+    { name = "M Laraib Ali", email = "laraibg786@outlook.com" }
+]
 readme = "README.md"
 license = "MIT"
 keywords = [
@@ -51,6 +56,10 @@ dev = [
   {include-group = "test"}
 ]
 docs = [
+    "zensical>=0.0.23",
+    "mkdocstrings[python]>=0.30.1",
+    "mkdocs-minify-plugin>=0.8.0",
+    "pymdown-extensions>=10.15",
 ]
 test = [
     "pytest>=8.3.5",

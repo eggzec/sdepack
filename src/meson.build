@@ -28,6 +28,12 @@ fortran_sources = [
   'r8_normal.f',
   'r8_uniform.f',
   'rk1_ti_solve.f',
+  'rk1_tv_solve.f',
+  'rk2_ti_solve.f',
+  'rk2_tv_solve.f',
+  'rk3_ti_solve.f',
+  'rk4_ti_solve.f',
+  'rk4_tv_solve.f',
   'output.f'
 ]
 
