@@ -37,12 +37,6 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Set up QEMU
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: all
-
       - name: Add gfortran to PATH (macOS)
         if: runner.os == 'macOS'
         run: echo "$(brew --prefix gcc)/bin" >> "$GITHUB_PATH"
@@ -55,7 +49,7 @@ jobs:
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheels
         env:
-          CIBW_ARCHS_LINUX: x86_64 i686 aarch64 ppc64le s390x
+          CIBW_ARCHS_LINUX: x86_64
           CIBW_ARCHS_MACOS: arm64
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_ENVIRONMENT_MACOS: "PATH=/opt/homebrew/bin:$PATH MACOSX_DEPLOYMENT_TARGET=15.0"
