@@ -1,0 +1,118 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  schedule:
+    - cron: "0 0 * * 0"  # Runs every Sunday at midnight UTC
+
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build wheels (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest    # Apple Silicon (arm64)
+          - macos-15-large  # Intel (x86_64)
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy cibuildwheel
+
+      - name: Build wheels
+        run: python -m cibuildwheel --output-dir wheels
+        env:
+          # Linux: build for x86_64, i686, aarch64, ppc64le, s390x
+          CIBW_ARCHS_LINUX: x86_64 i686 aarch64 ppc64le s390x
+          # macOS: build for the native arch of the runner
+          CIBW_ARCHS_MACOS: auto
+          # Windows: build for AMD64 and x86 (32-bit)
+          CIBW_ARCHS_WINDOWS: AMD64 x86
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v7
+        with:
+          name: wheels-${{ matrix.os }}
+          path: wheels/*.whl
+
+  test:
+    name: Test wheels (${{ matrix.os }}, Python ${{ matrix.python-version }})
+    needs: build
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+          - macos-15-large
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        exclude:
+          # macos-latest (arm64) may not have older Python builds
+          - os: macos-latest
+            python-version: '3.10'
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
+
+      - name: Download wheels
+        uses: actions/download-artifact@v8
+        with:
+          name: wheels-${{ matrix.os }}
+          path: wheels
+
+      - name: Install wheel and test dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          # Install the wheel matching this Python version; fall back to any available
+          python -m pip install --find-links=wheels --no-index sdepack || \
+            python -m pip install --find-links=wheels sdepack
+
+      - name: Run tests
+        run: python -m pytest tests/ -v

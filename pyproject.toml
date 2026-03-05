@@ -78,7 +78,7 @@ version_scheme = "release-branch-semver"
 local_scheme = "no-local-version"
 
 [tool.cibuildwheel]
+enable = ["cpython-prerelease"]
 skip = [
-  "*-win32",  # skip 32-bit Windows
-  "pp*",      # skip all PyPy builds
+  "pp*",  # skip all PyPy builds
 ]

@@ -23,6 +23,8 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
+          - macos-latest    # Apple Silicon (arm64)
+          - macos-15-large  # Intel (x86_64)
 
     steps:
       - name: Checkout source
@@ -33,15 +35,26 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
 
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install numpy cibuildwheel==2.23.3
+          python -m pip install numpy cibuildwheel
 
       - name: Build wheels
-        run: |
-          python -m cibuildwheel --output-dir wheels
+        run: python -m cibuildwheel --output-dir wheels
+        env:
+          CIBW_ARCHS_LINUX: x86_64 i686 aarch64 ppc64le s390x
+          CIBW_ARCHS_MACOS: auto
+          CIBW_ARCHS_WINDOWS: AMD64 x86
 
       - name: Upload wheels
         uses: actions/upload-artifact@v7
