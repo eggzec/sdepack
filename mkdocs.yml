@@ -13,6 +13,8 @@ extra:
 
 theme:
   name: material
+  features:
+    - content.code.copy
 
 markdown_extensions:
   - admonition
