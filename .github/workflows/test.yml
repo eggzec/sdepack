@@ -52,7 +52,9 @@ jobs:
 
       - name: Install gfortran (macOS)
         if: runner.os == 'macOS'
-        run: brew install gcc
+        run: |
+          brew install gcc
+          echo "$(brew --prefix gcc)/bin" >> "$GITHUB_PATH"
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
