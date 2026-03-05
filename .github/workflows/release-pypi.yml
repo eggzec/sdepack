@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os:
           - ubuntu-latest
@@ -43,11 +43,9 @@ jobs:
         with:
           platforms: all
 
-      - name: Install gfortran (macOS)
+      - name: Add gfortran to PATH (macOS)
         if: runner.os == 'macOS'
-        run: |
-          brew install gcc
-          echo "$(brew --prefix gcc)/bin" >> "$GITHUB_PATH"
+        run: echo "$(brew --prefix gcc)/bin" >> "$GITHUB_PATH"
 
       - name: Install Python dependencies
         run: |

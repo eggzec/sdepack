@@ -50,11 +50,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install gfortran (macOS)
+      - name: Add gfortran to PATH (macOS)
         if: runner.os == 'macOS'
-        run: |
-          brew install gcc
-          echo "$(brew --prefix gcc)/bin" >> "$GITHUB_PATH"
+        run: echo "$(brew --prefix gcc)/bin" >> "$GITHUB_PATH"
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
