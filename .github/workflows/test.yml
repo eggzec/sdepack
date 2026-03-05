@@ -20,19 +20,39 @@ permissions:
   contents: read
 
 jobs:
+  fetch-python-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      supported_versions: ${{ steps.fetch-versions.outputs.supported_versions }}
+      bound_versions: ${{ steps.fetch-versions.outputs.bound_versions }}
+    steps:
+      - name: Fetch Supported Python
+        id: fetch-versions
+        run: |
+          versions=$(curl -fsSL https://endoflife.date/api/v1/products/python/ \
+                     | jq '[ .result.releases[] | select(.isEol == false) | .label ]')
+
+          echo "supported_versions=$(echo $versions | jq -c '.')"        >> $GITHUB_OUTPUT
+          echo "bound_versions=$(echo $versions | jq -c '[.[0],.[-1]]')" >> $GITHUB_OUTPUT
+
   build-and-test:
     name: Build and Test
+    needs: fetch-python-versions
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ${{ fromJson(needs.fetch-python-versions.outputs.supported_versions) }}
 
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      - name: Install gfortran (macOS)
+        if: runner.os == 'macOS'
+        run: brew install gcc
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v7

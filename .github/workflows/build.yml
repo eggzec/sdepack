@@ -19,6 +19,21 @@ permissions:
   contents: read
 
 jobs:
+  fetch-python-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      supported_versions: ${{ steps.fetch-versions.outputs.supported_versions }}
+      bound_versions: ${{ steps.fetch-versions.outputs.bound_versions }}
+    steps:
+      - name: Fetch Supported Python
+        id: fetch-versions
+        run: |
+          versions=$(curl -fsSL https://endoflife.date/api/v1/products/python/ \
+                     | jq '[ .result.releases[] | select(.isEol == false) | .label ]')
+
+          echo "supported_versions=$(echo $versions | jq -c '.')"        >> $GITHUB_OUTPUT
+          echo "bound_versions=$(echo $versions | jq -c '[.[0],.[-1]]')" >> $GITHUB_OUTPUT
+
   build:
     name: Build wheels (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -48,6 +63,10 @@ jobs:
         with:
           platforms: all
 
+      - name: Install gfortran (macOS)
+        if: runner.os == 'macOS'
+        run: brew install gcc
+
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
@@ -69,7 +88,7 @@ jobs:
 
   test:
     name: Test wheels (${{ matrix.os }}, Python ${{ matrix.python-version }})
-    needs: build
+    needs: [fetch-python-versions, build]
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -79,7 +98,7 @@ jobs:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        python-version: ${{ fromJson(needs.fetch-python-versions.outputs.supported_versions) }}
 
     steps:
       - name: Checkout source

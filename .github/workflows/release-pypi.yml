@@ -43,6 +43,10 @@ jobs:
         with:
           platforms: all
 
+      - name: Install gfortran (macOS)
+        if: runner.os == 'macOS'
+        run: brew install gcc
+
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
