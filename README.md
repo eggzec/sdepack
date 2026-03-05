@@ -6,7 +6,8 @@
 [![Documentation](https://github.com/eggzec/sdepack/actions/workflows/docs.yml/badge.svg)](https://github.com/eggzec/sdepack/actions/workflows/docs.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-[![codecov](https://codecov.io/gh/eggzec/sdepack/branch/master/graph/badge.svg)](https://codecov.io/gh/eggzec/sdepack)
+[![codecov](https://codecov.io/github/eggzec/sdepack/graph/badge.svg)](https://codecov.io/github/eggzec/sdepack)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=eggzec_sdepack&metric=alert_status)](https://sonarcloud.io/project/overview?id=eggzec_sdepack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 [![PyPI Downloads](https://img.shields.io/pypi/dm/sdepack.svg?label=PyPI%20downloads)](https://pypi.org/project/sdepack/)
