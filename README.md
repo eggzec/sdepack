@@ -2,9 +2,15 @@
 
 **Runge-Kutta Numerical Integration of Stochastic Differential Equations for Python**
 
-[![PyPI](https://img.shields.io/pypi/v/sdepack)](https://pypi.org/project/sdepack/)
+[![Tests](https://github.com/eggzec/sdepack/actions/workflows/test.yml/badge.svg)](https://github.com/eggzec/sdepack/actions/workflows/test.yml)
+[![Documentation](https://github.com/eggzec/sdepack/actions/workflows/docs.yml/badge.svg)](https://github.com/eggzec/sdepack/actions/workflows/docs.yml)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+[![codecov](https://codecov.io/gh/eggzec/sdepack/branch/master/graph/badge.svg)](https://codecov.io/gh/eggzec/sdepack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+
+[![PyPI Downloads](https://img.shields.io/pypi/dm/sdepack.svg?label=PyPI%20downloads)](https://pypi.org/project/sdepack/)
+[![Python versions](https://img.shields.io/pypi/pyversions/sdepack.svg)](https://pypi.org/project/sdepack/)
 
 `sdepack` is a high-performance Python library for numerically solving scalar
 [stochastic differential equations (SDEs)](https://en.wikipedia.org/wiki/Stochastic_differential_equation)
