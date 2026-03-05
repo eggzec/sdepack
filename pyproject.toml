@@ -79,6 +79,3 @@ local_scheme = "no-local-version"
 
 [tool.cibuildwheel]
 enable = ["cpython-prerelease"]
-skip = [
-  "pp*",  # skip all PyPy builds
-]
