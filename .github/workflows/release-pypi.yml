@@ -58,7 +58,7 @@ jobs:
           CIBW_ARCHS_LINUX: x86_64 i686 aarch64 ppc64le s390x
           CIBW_ARCHS_MACOS: arm64
           CIBW_ARCHS_WINDOWS: AMD64
-          CIBW_ENVIRONMENT_MACOS: "PATH=/opt/homebrew/bin:$PATH"
+          CIBW_ENVIRONMENT_MACOS: "PATH=/opt/homebrew/bin:$PATH MACOSX_DEPLOYMENT_TARGET=15.0"
 
       - name: Upload wheels
         uses: actions/upload-artifact@v7
