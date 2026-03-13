@@ -78,7 +78,7 @@ def wheel():
 def clean():
     logger.debug("Starting cleanup ...")
 
-    run_command("uv pip uninstall nulapack")
+    run_command("uv pip uninstall sdepack")
 
     for entry in Path("").iterdir():
         if entry.name in ["dist", "build", "lib", ".pytest_cache", ".ruff_cache"]:
@@ -103,7 +103,7 @@ def clean():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="NULAPACK Build Script")
+    parser = argparse.ArgumentParser(description="SDEPack Build Script")
     parser.add_argument(
         "mode",
         help="""Build mode:
