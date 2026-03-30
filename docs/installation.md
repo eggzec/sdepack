@@ -101,18 +101,18 @@ This invokes the `meson` build system to compile the Fortran sources via
     Source builds require a working Fortran compiler. On most Linux
     distributions install `gfortran`:
 
-    ```bash
-    # Debian/Ubuntu
-    sudo apt install gfortran
+```bash
+# Debian/Ubuntu
+sudo apt install gfortran
 
-    # Fedora
-    sudo dnf install gcc-gfortran
+# Fedora
+sudo dnf install gcc-gfortran
 
-    # macOS (Homebrew)
-    brew install gcc
-    ```
+# macOS (Homebrew)
+brew install gcc
+```
 
-    On Windows, install MinGW-w64 with gfortran or use MSYS2.
+On Windows, install MinGW-w64 with gfortran or use MSYS2.
 
 ## Verifying the installation
 

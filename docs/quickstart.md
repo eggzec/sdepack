@@ -264,16 +264,16 @@ mean 0 and variance $\sigma^2/(2\theta) = 0.125$.
 !!! tip "Plotting trajectories"
     Use `matplotlib` with the time grid for visualization:
 
-    ```python
-    import matplotlib.pyplot as plt
+```python
+import matplotlib.pyplot as plt
 
-    t = np.linspace(0.0, tn, N + 1)
-    plt.plot(t, x)
-    plt.xlabel("Time")
-    plt.ylabel("X(t)")
-    plt.title("SDE trajectory")
-    plt.show()
-    ```
+t = np.linspace(0.0, tn, N + 1)
+plt.plot(t, x)
+plt.xlabel("Time")
+plt.ylabel("X(t)")
+plt.title("SDE trajectory")
+plt.show()
+```
 
 !!! tip "Seed selection"
     The seed must be a positive integer. Different seeds produce entirely

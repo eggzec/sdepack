@@ -28,16 +28,6 @@ $$
 where $W(t)$ is a [Wiener process](https://en.wikipedia.org/wiki/Wiener_process)
 (standard Brownian motion).
 
-## Why sdepack?
-
-| Feature | Detail |
-|---|---|
-| **Performance** | Compiled Fortran core — no Python loops in the hot path |
-| **Reproducibility** | Deterministic seeded RNG (Park-Miller LCG with Schrage's overflow protection) |
-| **Range of solvers** | Orders 1–4, covering both time-invariant and time-variant SDEs |
-| **Simplicity** | One function call per solve; solutions land in a pre-allocated NumPy array |
-| **Portability** | Linux, macOS, Windows; Python 3.10–3.14 |
-
 ## Mathematical model
 
 Within the solvers, the SDE is parameterized as:
