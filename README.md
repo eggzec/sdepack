@@ -4,7 +4,6 @@
 
 [![Tests](https://github.com/eggzec/sdepack/actions/workflows/test.yml/badge.svg)](https://github.com/eggzec/sdepack/actions/workflows/test.yml)
 [![Documentation](https://github.com/eggzec/sdepack/actions/workflows/docs.yml/badge.svg)](https://github.com/eggzec/sdepack/actions/workflows/docs.yml)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 [![codecov](https://codecov.io/github/eggzec/sdepack/graph/badge.svg)](https://codecov.io/github/eggzec/sdepack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
