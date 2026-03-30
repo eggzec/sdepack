@@ -4,93 +4,39 @@
 
 ---
 
-## What is sdepack?
+## Overview
 
 `sdepack` is a Python library for solving scalar
 [stochastic differential equations](https://en.wikipedia.org/wiki/Stochastic_differential_equation)
-(SDEs) using stochastic Runge-Kutta methods. The numerical core is written in
-Fortran and compiled via `f2py`, giving near-native performance while
-providing a clean, NumPy-based Python API.
+(SDEs) using stochastic Runge-Kutta methods. It allows you to **easily** and **efficiently**
+integrate SDEs driven by a Wiener process — from molecular dynamics and population genetics
+to option pricing and control systems.
 
-A **stochastic differential equation** is a differential equation in which one
-or more terms are stochastic processes, producing a solution that is itself a
-random process. SDEs are used to model phenomena across science and engineering
-where systems are subject to random influences — from molecular dynamics and
-population genetics to option pricing and signal processing.
+A **stochastic differential equation** is a differential equation in which one or more terms
+are stochastic processes, producing a solution that is itself a random process.
 
 `sdepack` targets **scalar Itô SDEs** of the general form:
 
 $$
-dX(t) = \underbrace{a(X, t)}_{\text{drift}}\,dt
-      + \underbrace{b(X, t)}_{\text{diffusion}}\,dW(t),
+dX(t) = a(X, t)\,dt + b(X, t)\,dW(t),
 $$
 
-where $W(t)$ is a [Wiener process](https://en.wikipedia.org/wiki/Wiener_process)
-(standard Brownian motion).
-
-## Why sdepack?
-
-| Feature | Detail |
-|---|---|
-| **Performance** | Compiled Fortran core — no Python loops in the hot path |
-| **Reproducibility** | Deterministic seeded RNG (Park-Miller LCG with Schrage's overflow protection) |
-| **Range of solvers** | Orders 1–4, covering both time-invariant and time-variant SDEs |
-| **Simplicity** | One function call per solve; solutions land in a pre-allocated NumPy array |
-| **Portability** | Linux, macOS, Windows; Python 3.10–3.14 |
-
-## Mathematical model
-
-Within the solvers, the SDE is parameterized as:
-
-**Time-invariant** routines integrate
+where $W(t)$ is a [Wiener process](https://en.wikipedia.org/wiki/Wiener_process) (standard
+Brownian motion). Within the solvers, the SDE is parameterized as:
 
 $$
-dX(t) = F(X)\,dt + Q\,G(X)\,dW(t),
+dX(t) = F(X, t)\,dt + Q\,G(X, t)\,dW(t),
 $$
 
-**Time-variant** routines integrate
+where $F$ is the user-supplied **drift** callback, $G$ is the user-supplied **diffusion**
+callback, and $Q$ scales the noise intensity. For **time-invariant** routines, $F$ and $G$
+do not depend explicitly on time.
 
-$$
-dX(t) = F(X,t)\,dt + Q\,G(X,t)\,dW(t),
-$$
+## Requirements
 
-where $Q$ scales the noise intensity (spectral density of the driving white
-noise), $F$ is the user-supplied **drift** callback and $G$ is the
-user-supplied **diffusion** callback.
+- [NumPy](http://www.numpy.org/)
 
-Integration is performed with a uniform time step:
-
-$$
-H = \frac{T_N - T_0}{N}.
-$$
-
-Stage noise for the Runge-Kutta stages is drawn from:
-
-$$
-W_i = Z_i\sqrt{\frac{Q_i Q}{H}},\quad Z_i \sim \mathcal{N}(0,1),
-$$
-
-where $Q_i$ are method-specific noise coefficients that ensure the correct
-stochastic scaling at each Runge-Kutta stage.
-
-## Available solvers
-
-| Solver | Stages | Order | Time-dependence | Based on |
-|---|---|---|---|---|
-| `rk1_ti_solve` | 1 | 1 | invariant | Euler-Maruyama |
-| `rk1_tv_solve` | 1 | 1 | variant | Euler-Maruyama |
-| `rk2_ti_solve` | 2 | 2 | invariant | Kasdin (1995) |
-| `rk2_tv_solve` | 2 | 2 | variant | Kasdin (1995) |
-| `rk3_ti_solve` | 3 | 3 | invariant | Kasdin (1995) |
-| `rk4_ti_solve` | 4 | 4 | invariant | Kasdin (1995) |
-| `rk4_tv_solve` | 4 | 4 | variant | Kasdin (1995) |
-
-!!! tip "Choosing a solver"
-    For exploratory work, start with `rk1_ti_solve` (Euler-Maruyama).
-    For production accuracy, prefer `rk4_ti_solve` or `rk4_tv_solve` — higher-order
-    methods converge faster and yield smoother trajectories for a given step count.
-
-## Quick example
+## Example Usage
 
 ```python
 import numpy as np
@@ -102,12 +48,36 @@ sdepack.rk4_ti_solve(
     lambda x: -x,    # drift F(X) = -X
     lambda x: 1.0,   # diffusion G(X) = 1
     x,
-    0.0,              # t0
-    10.0,             # tn
-    1.0,              # x0
-    1000,             # n steps
-    1.0,              # Q (noise intensity)
-    42,               # seed
+    0.0,             # t0
+    10.0,            # tn
+    1.0,             # x0
+    1000,            # n steps
+    1.0,             # Q (noise intensity)
+    42,              # seed
 )
-print(x[:6])  # first few values of the trajectory
+print(x[:6])
 ```
+
+## Main Features
+
+1. Seven stochastic Runge-Kutta solvers (orders 1–4).
+2. Both time-invariant and time-variant SDE forms.
+3. Plain Python callables for drift and diffusion — lambdas work too.
+4. Seeded, fully reproducible trajectories via a built-in PRNG.
+5. NumPy array output — integrates directly with matplotlib, scipy, and the scientific Python stack.
+
+**Available solvers:**
+
+| Solver | Stages | Order | Time-dependence | Based on |
+|---|---|---|---|---|
+| `rk1_ti_solve` | 1 | 1 | invariant | Euler-Maruyama |
+| `rk1_tv_solve` | 1 | 1 | variant | Euler-Maruyama |
+| `rk2_ti_solve` | 2 | 2 | invariant | Kasdin (1995) |
+| `rk2_tv_solve` | 2 | 2 | variant | Kasdin (1995) |
+| `rk3_ti_solve` | 3 | 3 | invariant | Kasdin (1995) |
+| `rk4_ti_solve` | 4 | 4 | invariant | Kasdin (1995) |
+| `rk4_tv_solve` | 4 | 4 | variant | Kasdin (1995) |
+
+## References
+
+- N. J. Kasdin, 1995, *Runge-Kutta algorithm for the numerical integration of stochastic differential equations*, Journal of Guidance, Control, and Dynamics, Vol. 18, No. 1, pp. 114–120.
