@@ -1,8 +1,10 @@
 # API Reference
 
-All public routines are exported via the `sdepack` Python module. Only
-subroutines declared in the `src/sdepack.pyf` interface file are accessible
-from Python.
+`sdepack` provides a Python interface to a high-performance Fortran numerical
+core compiled via `f2py`. All public routines are exported through the
+`sdepack` module; only subroutines declared in the `src/sdepack.pyf`
+interface file are accessible from Python. See the [Theory](theory.md) and
+[Quickstart](quickstart.md) for mathematical background and usage.
 
 ---
 
