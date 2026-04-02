@@ -4,69 +4,66 @@
 
 ---
 
-## Overview
+## What is sdepack?
 
 `sdepack` is a Python library for solving scalar
 [stochastic differential equations](https://en.wikipedia.org/wiki/Stochastic_differential_equation)
-(SDEs) using stochastic Runge-Kutta methods. It allows you to **easily** and **efficiently**
-integrate SDEs driven by a Wiener process — from molecular dynamics and population genetics
-to option pricing and control systems.
+(SDEs) using stochastic Runge-Kutta methods. The numerical core is written in
+Fortran and compiled via `f2py`, giving near-native performance while
+providing a clean, NumPy-based Python API.
 
-A **stochastic differential equation** is a differential equation in which one or more terms
-are stochastic processes, producing a solution that is itself a random process.
+A **stochastic differential equation** is a differential equation in which one
+or more terms are stochastic processes, producing a solution that is itself a
+random process. SDEs are used to model phenomena across science and engineering
+where systems are subject to random influences — from molecular dynamics and
+population genetics to option pricing and signal processing.
 
 `sdepack` targets **scalar Itô SDEs** of the general form:
 
 $$
-dX(t) = a(X, t)\,dt + b(X, t)\,dW(t),
+dX(t) = \underbrace{a(X, t)}_{\text{drift}}\,dt
+      + \underbrace{b(X, t)}_{\text{diffusion}}\,dW(t),
 $$
 
-where $W(t)$ is a [Wiener process](https://en.wikipedia.org/wiki/Wiener_process) (standard
-Brownian motion). Within the solvers, the SDE is parameterized as:
+where $W(t)$ is a [Wiener process](https://en.wikipedia.org/wiki/Wiener_process)
+(standard Brownian motion).
+
+## Mathematical model
+
+Within the solvers, the SDE is parameterized as:
+
+**Time-invariant** routines integrate
 
 $$
-dX(t) = F(X, t)\,dt + Q\,G(X, t)\,dW(t),
+dX(t) = F(X)\,dt + Q\,G(X)\,dW(t),
 $$
 
-where $F$ is the user-supplied **drift** callback, $G$ is the user-supplied **diffusion**
-callback, and $Q$ scales the noise intensity. For **time-invariant** routines, $F$ and $G$
-do not depend explicitly on time.
+**Time-variant** routines integrate
 
-## Requirements
+$$
+dX(t) = F(X,t)\,dt + Q\,G(X,t)\,dW(t),
+$$
 
-- [NumPy](http://www.numpy.org/)
+where $Q$ scales the noise intensity (spectral density of the driving white
+noise), $F$ is the user-supplied **drift** callback and $G$ is the
+user-supplied **diffusion** callback.
 
-## Example Usage
+Integration is performed with a uniform time step:
 
-```python
-import numpy as np
-import sdepack
+$$
+H = \frac{T_N - T_0}{N}.
+$$
 
-# Ornstein-Uhlenbeck process: dX = -X dt + dW
-x = np.zeros(1001, dtype=np.float64)
-sdepack.rk4_ti_solve(
-    lambda x: -x,    # drift F(X) = -X
-    lambda x: 1.0,   # diffusion G(X) = 1
-    x,
-    0.0,             # t0
-    10.0,            # tn
-    1.0,             # x0
-    1000,            # n steps
-    1.0,             # Q (noise intensity)
-    42,              # seed
-)
-print(x[:6])
-```
+Stage noise for the Runge-Kutta stages is drawn from:
 
-## Main Features
+$$
+W_i = Z_i\sqrt{\frac{Q_i Q}{H}},\quad Z_i \sim \mathcal{N}(0,1),
+$$
 
-1. Seven stochastic Runge-Kutta solvers (orders 1–4).
-2. Both time-invariant and time-variant SDE forms.
-3. Plain Python callables for drift and diffusion — lambdas work too.
-4. Seeded, fully reproducible trajectories via a built-in PRNG.
-5. NumPy array output — integrates directly with matplotlib, scipy, and the scientific Python stack.
+where $Q_i$ are method-specific noise coefficients that ensure the correct
+stochastic scaling at each Runge-Kutta stage.
 
-**Available solvers:**
+## Available solvers
 
 | Solver | Stages | Order | Time-dependence | Based on |
 |---|---|---|---|---|
@@ -78,6 +75,29 @@ print(x[:6])
 | `rk4_ti_solve` | 4 | 4 | invariant | Kasdin (1995) |
 | `rk4_tv_solve` | 4 | 4 | variant | Kasdin (1995) |
 
-## References
+!!! tip "Choosing a solver"
+    For exploratory work, start with `rk1_ti_solve` (Euler-Maruyama).
+    For production accuracy, prefer `rk4_ti_solve` or `rk4_tv_solve` — higher-order
+    methods converge faster and yield smoother trajectories for a given step count.
 
-- N. J. Kasdin, 1995, *Runge-Kutta algorithm for the numerical integration of stochastic differential equations*, Journal of Guidance, Control, and Dynamics, Vol. 18, No. 1, pp. 114–120.
+## Quick example
+
+```python
+import numpy as np
+import sdepack
+
+# Ornstein-Uhlenbeck process: dX = -X dt + dW
+x = np.zeros(1001, dtype=np.float64)
+sdepack.rk4_ti_solve(
+    lambda x: -x,    # drift F(X) = -X
+    lambda x: 1.0,   # diffusion G(X) = 1
+    x,
+    0.0,              # t0
+    10.0,             # tn
+    1.0,              # x0
+    1000,             # n steps
+    1.0,              # Q (noise intensity)
+    42,               # seed
+)
+print(x[:6])  # first few values of the trajectory
+```
