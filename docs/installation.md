@@ -134,21 +134,23 @@ pip install -e .
 ```
 
 !!! warning "Fortran compiler required"
-    Source builds require a working Fortran compiler (`gfortran` recommended) as well as
-    `meson` and `meson-python`.
+    Source builds require a working Fortran compiler. On most Linux distributions,
+    install `gfortran`:
 
-```bash
-# Debian/Ubuntu
-sudo apt install gfortran
-
-# Fedora
-sudo dnf install gcc-gfortran
-
-# macOS (Homebrew)
-brew install gcc
-```
-
-On Windows, install MinGW-w64 with gfortran or use MSYS2.
+    === "Debian / Ubuntu"
+        ```bash
+        sudo apt install gfortran
+        ```
+    === "Fedora"
+        ```bash
+        sudo dnf install gcc-gfortran
+        ```
+    === "macOS (Homebrew)"
+        ```bash
+        brew install gcc
+        ```
+    === "Windows"
+        Install [MinGW-w64](https://www.mingw-w64.org/) with gfortran or use MSYS2.
 
 ## Verifying the installation
 
