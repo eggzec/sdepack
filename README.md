@@ -1,4 +1,6 @@
-# sdepack
+![SDEPack](docs/assets/sdepack-banner.png)
+
+# SDEPack
 
 **Runge-Kutta Numerical Integration of Stochastic Differential Equations for Python**
 
