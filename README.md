@@ -1,4 +1,4 @@
-![SDEPack](docs/assets/sdepack-banner.png)
+![SDEPack](https://raw.githubusercontent.com/eggzec/sdepack/main/docs/assets/sdepack-banner.png)
 
 # SDEPack
 
